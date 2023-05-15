@@ -1,0 +1,16 @@
+titleOnly: true
+
+types:
+  - feat
+  - fix
+  - perf
+  - refactor
+  - test
+  - chore
+  - ci
+  - revert
+  - docs
+scopes:
+  - concept
+  - art
+  - code
