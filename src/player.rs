@@ -1,18 +1,15 @@
-use bevy::prelude::*;
 use bevy::app::AppExit;
+use bevy::prelude::*;
 
 pub const PLAYER_SPEED: f32 = 300.0;
 
 #[derive(Component)]
 pub struct Player {}
 
-pub fn spawn_player(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-) {
+pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn((
         SpriteBundle {
-            transform: Transform{
+            transform: Transform {
                 translation: Vec3::new(0.0, 0.0, 2.0),
                 rotation: Quat::IDENTITY,
                 scale: Vec3::new(2.0, 2.0, 2.0),
@@ -51,11 +48,8 @@ pub fn player_movement(
     }
 }
 
-pub fn exit_game(
-    keyboard_input: Res<Input<KeyCode>>,
-    mut exit: EventWriter<AppExit>
-) {
-        if keyboard_input.pressed(KeyCode::Q) {
-            exit.send(AppExit);
-        }
+pub fn exit_game(keyboard_input: Res<Input<KeyCode>>, mut exit: EventWriter<AppExit>) {
+    if keyboard_input.pressed(KeyCode::Q) {
+        exit.send(AppExit);
+    }
 }

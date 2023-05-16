@@ -1,6 +1,6 @@
-use bevy::prelude::*;
 use crate::game_camera::*;
 use crate::player::*;
+use bevy::prelude::*;
 
 mod game_camera;
 mod player;
