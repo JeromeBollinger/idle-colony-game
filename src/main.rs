@@ -18,5 +18,6 @@ fn main() {
         .add_startup_system(spawn_player)
         .add_system(player_movement)
         .add_system(exit_game)
+        .add_system(camera_zoom)
         .run();
 }
