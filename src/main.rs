@@ -1,8 +1,11 @@
 use crate::game_camera::*;
+use crate::map::*;
 use crate::player::*;
 use bevy::prelude::*;
+use bevy_ecs_tilemap::prelude::*;
 
 mod game_camera;
+mod map;
 mod player;
 
 fn main() {
@@ -14,6 +17,8 @@ fn main() {
             }),
             ..default()
         }))
+        .add_plugin(TilemapPlugin)
+        .add_startup_system(initiate_map)
         .add_startup_system(default_camera)
         .add_startup_system(spawn_player)
         .add_system(player_movement)
