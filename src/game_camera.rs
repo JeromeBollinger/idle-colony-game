@@ -8,7 +8,7 @@ pub fn default_camera(mut commands: Commands) {
     assert!(ZOOM_MAX < ZOOM_MIN);
     commands.spawn(Camera2dBundle {
         projection: OrthographicProjection {
-            scale: (ZOOM_MAX - ZOOM_MAX - ZOOM_MIN / 2.0).exp(),
+            scale: (ZOOM_MAX - ((ZOOM_MAX - ZOOM_MIN) / 2.0)).exp(),
             ..default()
         },
         ..default()
