@@ -1,11 +1,18 @@
 use bevy::prelude::*;
 
 const ZOOM_SPEED: f32 = 10.0;
-const ZOOM_MAX: f32 = -4.0;
+const ZOOM_MAX: f32 = -4.0; // Ensure that ZOOM_MAX < ZOOM_MIN
 const ZOOM_MIN: f32 = 2.0;
 
 pub fn default_camera(mut commands: Commands) {
-    commands.spawn(Camera2dBundle::default());
+    assert!(ZOOM_MAX < ZOOM_MIN);
+    commands.spawn(Camera2dBundle {
+        projection: OrthographicProjection {
+            scale: (ZOOM_MAX - ZOOM_MAX - ZOOM_MIN / 2.0).exp(),
+            ..default()
+        },
+        ..default()
+    });
 }
 
 pub fn camera_zoom(
