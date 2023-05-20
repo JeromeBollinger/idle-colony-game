@@ -1,10 +1,7 @@
 use bevy::prelude::*;
 use bevy_ecs_tilemap::prelude::*;
 
-pub fn initiate_map(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-) {
+pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
     let texture_handle: Handle<Image> = asset_server.load("regolith.png");
     let map_size = TilemapSize { x: 32, y: 32 };
     let tilemap_entity = commands.spawn_empty().id();

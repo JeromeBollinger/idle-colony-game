@@ -1,12 +1,12 @@
 use crate::game_camera::*;
-use crate::player::*;
 use crate::map::*;
+use crate::player::*;
 use bevy::prelude::*;
 use bevy_ecs_tilemap::prelude::*;
 
 mod game_camera;
-mod player;
 mod map;
+mod player;
 
 fn main() {
     App::new()
