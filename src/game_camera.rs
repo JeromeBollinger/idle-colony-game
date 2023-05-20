@@ -5,7 +5,9 @@ const ZOOM_MAX: f32 = -4.0; // Ensure that ZOOM_MAX < ZOOM_MIN
 const ZOOM_MIN: f32 = 2.0;
 
 pub fn default_camera(mut commands: Commands) {
-    assert!(ZOOM_MAX < ZOOM_MIN);
+    if ZOOM_MAX >= ZOOM_MIN {
+        panic!("camera zoom boundaries are inversed!")
+    };
     commands.spawn(Camera2dBundle {
         projection: OrthographicProjection {
             scale: (ZOOM_MAX - ((ZOOM_MAX - ZOOM_MIN) / 2.0)).exp(),
