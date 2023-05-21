@@ -1,12 +1,14 @@
 use crate::game_camera::*;
 use crate::map::*;
 use crate::player::*;
+use crate::track::*;
 use bevy::prelude::*;
 use bevy_ecs_tilemap::prelude::*;
 
 mod game_camera;
 mod map;
 mod player;
+mod track;
 
 fn main() {
     App::new()
@@ -21,6 +23,7 @@ fn main() {
         .add_startup_system(initiate_map)
         .add_startup_system(default_camera)
         .add_startup_system(spawn_player)
+        .add_startup_system(spawn_track)
         .add_system(player_movement)
         .add_system(exit_game)
         .add_system(camera_zoom)
