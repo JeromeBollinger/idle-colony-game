@@ -14,3 +14,7 @@ scopes:
   - concept
   - art
   - code
+  - player
+  - map
+  - camera
+  - block
