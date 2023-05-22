@@ -1,9 +1,8 @@
 use bevy::prelude::*;
 use bevy_ecs_tilemap::prelude::*;
-use std::path::Path;
 use std::fs::File;
 use std::io::*;
-
+use std::path::Path;
 
 pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
     let texture_handle: Vec<Handle<Image>> = vec![
@@ -11,7 +10,6 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         asset_server.load("regolith2.png"),
     ];
     let map_size = TilemapSize { x: 32, y: 32 };
-
 
     let tile_size = TilemapTileSize { x: 16.0, y: 16.0 };
     let grid_size = tile_size.into();
@@ -41,7 +39,9 @@ fn create_map(map_size: TilemapSize, commands: &mut Commands) -> (Entity, TileSt
                 .spawn(TileBundle {
                     position: tile_pos,
                     tilemap_id: TilemapId(tilemap_entity),
-                    texture_index: TileTextureIndex(read_map(Path::new("assets/maps/map1.txt"))[x as usize][y as usize]),
+                    texture_index: TileTextureIndex(
+                        read_map(Path::new("assets/maps/map1.txt"))[x as usize][y as usize],
+                    ),
                     ..Default::default()
                 })
                 .id();
@@ -51,7 +51,7 @@ fn create_map(map_size: TilemapSize, commands: &mut Commands) -> (Entity, TileSt
     (tilemap_entity, tile_storage)
 }
 
-fn read_map(map_path: &Path) -> Vec<Vec<u32>>{
+fn read_map(map_path: &Path) -> Vec<Vec<u32>> {
     let input = File::open(map_path).expect("No map found");
     let mut map: Vec<Vec<u32>> = vec![vec![]];
 
