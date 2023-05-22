@@ -23,7 +23,8 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
 
 pub fn player_movement(
     keyboard_input: Res<Input<KeyCode>>,
-    mut player_query: Query<&mut Transform, With<Player>>,
+    mut player_query: Query<&mut Transform, (With<Player>, Without<Camera>)>,
+    mut camera_query: Query<&mut Transform, (With<Camera>, Without<Player>)>,
     time: Res<Time>,
 ) {
     if let Ok(mut transform) = player_query.get_single_mut() {
@@ -45,6 +46,10 @@ pub fn player_movement(
             direction = direction.normalize();
         }
         transform.translation += direction * PLAYER_SPEED * time.delta_seconds();
+        if let Ok(mut camera_transform) = camera_query.get_single_mut() {
+            camera_transform.translation.x = transform.translation.x;
+            camera_transform.translation.y = transform.translation.y;
+        }
     }
 }
 
