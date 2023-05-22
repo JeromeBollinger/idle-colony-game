@@ -1,5 +1,9 @@
 use bevy::prelude::*;
 use bevy_ecs_tilemap::prelude::*;
+use std::path::Path;
+use std::fs::File;
+use std::io::*;
+
 
 pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
     let texture_handle: Vec<Handle<Image>> = vec![
@@ -37,7 +41,7 @@ fn create_map(map_size: TilemapSize, commands: &mut Commands) -> (Entity, TileSt
                 .spawn(TileBundle {
                     position: tile_pos,
                     tilemap_id: TilemapId(tilemap_entity),
-                    texture_index: TileTextureIndex(0),
+                    texture_index: TileTextureIndex(read_map(Path::new("assets/maps/map1.txt"))[x as usize][y as usize]),
                     ..Default::default()
                 })
                 .id();
@@ -45,4 +49,23 @@ fn create_map(map_size: TilemapSize, commands: &mut Commands) -> (Entity, TileSt
         }
     }
     (tilemap_entity, tile_storage)
+}
+
+fn read_map(map_path: &Path) -> Vec<Vec<u32>>{
+    let input = File::open(map_path).expect("No map found");
+    let mut map: Vec<Vec<u32>> = vec![vec![]];
+
+    for (_, line) in BufReader::new(input).lines().enumerate() {
+        if let Ok(line) = line {
+            for (x, c) in line.chars().enumerate() {
+                match c {
+                    'o' => map[x].push(0),
+                    'x' => map[x].push(1),
+                    _ => map[x].push(1),
+                }
+                map.push(vec![]);
+            }
+        }
+    }
+    map
 }
