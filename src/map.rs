@@ -37,6 +37,7 @@ fn create_map(map_size: TilemapSize, commands: &mut Commands) -> (Entity, TileSt
                 .spawn(TileBundle {
                     position: tile_pos,
                     tilemap_id: TilemapId(tilemap_entity),
+                    texture_index: TileTextureIndex(0),
                     ..Default::default()
                 })
                 .id();
