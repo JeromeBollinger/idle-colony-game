@@ -78,12 +78,13 @@ impl fmt::Display for TrackKind {
 }
 
 pub fn spawn_tracks(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let track = Track::default();
     commands.spawn((
         SpriteBundle {
             transform: Transform::from_xyz(0.0, 0.0, 1.0),
-            texture: asset_server.load("player.png"),
+            texture: asset_server.load(track.kind.asset()),
             ..default()
         },
-        Track::default(),
+        track,
     ));
 }
