@@ -13,12 +13,18 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         asset_server.load("transparent.png"),
         asset_server.load("regolith2.png"),
     ];
-    let floor_texture_handle: Vec<Handle<Image>> = vec![
-        asset_server.load("regolith.png"),
-    ];
+    let floor_texture_handle: Vec<Handle<Image>> = vec![asset_server.load("regolith.png")];
 
-    let (wall_tilemap_entity, wall_tile_storage) = create_map(map_size, &mut commands, read_map(Path::new("assets/maps/map1.txt")));
-    let (floor_tilemap_entity, floor_tile_storage) = create_map(map_size, &mut commands, read_map(Path::new("assets/maps/map_floor.txt")));
+    let (wall_tilemap_entity, wall_tile_storage) = create_map(
+        map_size,
+        &mut commands,
+        read_map(Path::new("assets/maps/map1.txt")),
+    );
+    let (floor_tilemap_entity, floor_tile_storage) = create_map(
+        map_size,
+        &mut commands,
+        read_map(Path::new("assets/maps/map_floor.txt")),
+    );
 
     commands.entity(wall_tilemap_entity).insert(TilemapBundle {
         grid_size,
@@ -43,7 +49,11 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
     });
 }
 
-fn create_map(map_size: TilemapSize, commands: &mut Commands, index_map: Vec<Vec<u32>>) -> (Entity, TileStorage) {
+fn create_map(
+    map_size: TilemapSize,
+    commands: &mut Commands,
+    index_map: Vec<Vec<u32>>,
+) -> (Entity, TileStorage) {
     let tilemap_entity = commands.spawn_empty().id();
     let mut tile_storage = TileStorage::empty(map_size);
     for x in 0..map_size.x {
