@@ -16,6 +16,22 @@ pub enum TrackKind {
     TTop,
 }
 
+impl TrackKind{
+    pub fn asset(&self) -> &str {
+        match self {
+            Self::Horizontal => "tracks/horizontalTrack.png",
+            Self::Vertical => "tracks/verticalTrack.png",
+            Self::Cross => "tracks/crossTrack.png",
+            Self::CurveTR => "tracks/TopRightTrack.png",
+            Self::CurveTL => "tracks/TopLeftTrack.png",
+            Self::CurveBR => "tracks/BottomRightTrack.png",
+            Self::CurveBL => "tracks/BottomLeftTrack.png",
+            Self::TLeft => "tracks/TLeftTrack.png",
+            Self::TRight => "tracks/TRightTrack.png",
+            Self::TBottom => "tracks/TBottomTrack.png",
+            Self::TTop => "tracks/TTopTrack.png",
+        }
+    }
 }
 
 #[derive(Debug, Component)]
