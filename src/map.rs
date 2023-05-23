@@ -91,3 +91,6 @@ fn read_map(map_path: &Path) -> Vec<Vec<u32>> {
     }
     map
 }
+
+#[derive(Component)]
+struct Solid ();
