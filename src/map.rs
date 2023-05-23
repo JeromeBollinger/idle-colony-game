@@ -5,15 +5,14 @@ use std::io::*;
 use std::path::Path;
 
 pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let texture_handle: Vec<Handle<Image>> = vec![
-        asset_server.load("regolith.png"),
-        asset_server.load("regolith2.png"),
-    ];
     let map_size = TilemapSize { x: 32, y: 32 };
-
     let tile_size = TilemapTileSize { x: 16.0, y: 16.0 };
     let grid_size = tile_size.into();
     let map_type = TilemapType::default();
+    let wall_texture_handle: Vec<Handle<Image>> = vec![
+        asset_server.load("transparent.png"),
+        asset_server.load("regolith2.png"),
+    ];
 
     let (tilemap_entity, tile_storage) = create_map(map_size, &mut commands);
 
@@ -22,7 +21,7 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         map_type,
         size: map_size,
         storage: tile_storage,
-        texture: TilemapTexture::Vector(texture_handle),
+        texture: TilemapTexture::Vector(wall_texture_handle),
         tile_size,
         transform: get_tilemap_center_transform(&map_size, &grid_size, &map_type, 0.0),
         ..Default::default()
