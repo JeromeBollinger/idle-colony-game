@@ -13,6 +13,9 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         asset_server.load("transparent.png"),
         asset_server.load("regolith2.png"),
     ];
+    let floor_texture_handle: Vec<Handle<Image>> = vec![
+        asset_server.load("regolith.png"),
+    ];
 
     let (tilemap_entity, tile_storage) = create_map(map_size, &mut commands);
 
