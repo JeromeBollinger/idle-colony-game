@@ -18,6 +18,7 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
     ];
 
     let (wall_tilemap_entity, wall_tile_storage) = create_map(map_size, &mut commands, read_map(Path::new("assets/maps/map1.txt")));
+    let (floor_tilemap_entity, floor_tile_storage) = create_map(map_size, &mut commands, read_map(Path::new("assets/maps/map_floor.txt")));
 
     commands.entity(wall_tilemap_entity).insert(TilemapBundle {
         grid_size,
@@ -25,6 +26,17 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         size: map_size,
         storage: wall_tile_storage,
         texture: TilemapTexture::Vector(wall_texture_handle),
+        tile_size,
+        transform: get_tilemap_center_transform(&map_size, &grid_size, &map_type, 0.0),
+        ..Default::default()
+    });
+
+    commands.entity(floor_tilemap_entity).insert(TilemapBundle {
+        grid_size,
+        map_type,
+        size: map_size,
+        storage: floor_tile_storage,
+        texture: TilemapTexture::Vector(floor_texture_handle),
         tile_size,
         transform: get_tilemap_center_transform(&map_size, &grid_size, &map_type, 0.0),
         ..Default::default()
