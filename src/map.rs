@@ -17,7 +17,7 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         asset_server.load("regolith.png"),
     ];
 
-    let (tilemap_entity, tile_storage) = create_map(map_size, &mut commands);
+    let (tilemap_entity, tile_storage) = create_map(map_size, &mut commands, read_map(Path::new("assets/maps/map1.txt")));
 
     commands.entity(tilemap_entity).insert(TilemapBundle {
         grid_size,
@@ -31,7 +31,7 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
     });
 }
 
-fn create_map(map_size: TilemapSize, commands: &mut Commands) -> (Entity, TileStorage) {
+fn create_map(map_size: TilemapSize, commands: &mut Commands, index_map: Vec<Vec<u32>>) -> (Entity, TileStorage) {
     let tilemap_entity = commands.spawn_empty().id();
     let mut tile_storage = TileStorage::empty(map_size);
     for x in 0..map_size.x {
@@ -41,9 +41,7 @@ fn create_map(map_size: TilemapSize, commands: &mut Commands) -> (Entity, TileSt
                 .spawn(TileBundle {
                     position: tile_pos,
                     tilemap_id: TilemapId(tilemap_entity),
-                    texture_index: TileTextureIndex(
-                        read_map(Path::new("assets/maps/map1.txt"))[x as usize][y as usize],
-                    ),
+                    texture_index: TileTextureIndex(index_map[x as usize][y as usize]),
                     ..Default::default()
                 })
                 .id();
