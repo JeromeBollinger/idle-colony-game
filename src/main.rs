@@ -1,9 +1,9 @@
 use crate::game_camera::*;
 use crate::map::*;
 use crate::player::*;
-use tracks::*;
 use bevy::prelude::*;
 use bevy_ecs_tilemap::prelude::*;
+use tracks::*;
 
 mod game_camera;
 mod map;

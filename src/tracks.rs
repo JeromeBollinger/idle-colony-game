@@ -16,7 +16,7 @@ pub enum TrackKind {
     TTop,
 }
 
-impl TrackKind{
+impl TrackKind {
     pub fn asset(&self) -> &str {
         match self {
             Self::Horizontal => "tracks/horizontalTrack.png",
@@ -41,13 +41,11 @@ pub struct Track {
 
 impl Track {
     pub fn new(kind: TrackKind) -> Self {
-        Track{
-            kind,
-        }
+        Track { kind }
     }
 
     pub fn default() -> Self {
-        Track{
+        Track {
             kind: TrackKind::Cross,
         }
     }
