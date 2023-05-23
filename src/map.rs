@@ -27,7 +27,7 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         storage: wall_tile_storage,
         texture: TilemapTexture::Vector(wall_texture_handle),
         tile_size,
-        transform: get_tilemap_center_transform(&map_size, &grid_size, &map_type, 0.0),
+        transform: get_tilemap_center_transform(&map_size, &grid_size, &map_type, 1.0),
         ..Default::default()
     });
 
