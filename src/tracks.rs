@@ -6,6 +6,16 @@ pub enum TrackKind {
     Horizontal,
     Vertical,
     Cross,
+    CurveTR,
+    CurveTL,
+    CurveBR,
+    CurveBL,
+    TLeft,
+    TRight,
+    TBottom,
+    TTop,
+}
+
 }
 
 #[derive(Debug, Component)]
@@ -39,6 +49,14 @@ impl fmt::Display for TrackKind {
             Self::Horizontal => write!(f, "kind=Horizontal"),
             Self::Vertical => write!(f, "kind=Vertical"),
             Self::Cross => write!(f, "kind=Cross"),
+            Self::CurveTR => write!(f, "kind=CurveTR"),
+            Self::CurveTL => write!(f, "kind=CurveTL"),
+            Self::CurveBR => write!(f, "kind=CurveBR"),
+            Self::CurveBL => write!(f, "kind=CurveBL"),
+            Self::TLeft => write!(f, "kind=TLeft"),
+            Self::TRight => write!(f, "kind=TRight"),
+            Self::TBottom => write!(f, "kind=TBottom"),
+            Self::TTop => write!(f, "kind=TTop"),
         }
     }
 }
