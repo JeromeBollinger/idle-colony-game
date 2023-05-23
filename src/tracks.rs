@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use std::fmt;
 
+#[allow(dead_code)]
 #[derive(Debug)]
 pub enum TrackKind {
     Horizontal,
@@ -39,6 +40,7 @@ pub struct Track {
     kind: TrackKind,
 }
 
+#[allow(dead_code)]
 impl Track {
     pub fn new(kind: TrackKind) -> Self {
         Track { kind }
