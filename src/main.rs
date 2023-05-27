@@ -3,10 +3,12 @@ use crate::map::*;
 use crate::player::*;
 use bevy::prelude::*;
 use bevy_ecs_tilemap::prelude::*;
+use tracks::*;
 
 mod game_camera;
 mod map;
 mod player;
+mod tracks;
 
 fn main() {
     App::new()
@@ -19,6 +21,7 @@ fn main() {
         }))
         .add_plugin(TilemapPlugin)
         .add_startup_system(initiate_map)
+        .add_startup_system(spawn_tracks)
         .add_startup_system(default_camera)
         .add_startup_system(spawn_player)
         .add_system(player_movement)
