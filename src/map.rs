@@ -80,10 +80,9 @@ fn read_map(map_path: &Path) -> Vec<Vec<u32>> {
     for (_, line) in BufReader::new(input).lines().enumerate() {
         if let Ok(line) = line {
             for (x, c) in line.chars().enumerate() {
-                match c {
-                    'o' => map[x].push(0),
-                    'x' => map[x].push(1),
-                    _ => map[x].push(1),
+                match c.to_digit(10) {
+                    Some(i) => map[x].push(i),
+                    None => map[x].push(0),
                 }
                 map.push(vec![]);
             }
