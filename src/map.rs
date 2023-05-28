@@ -76,6 +76,12 @@ fn create_map(
 fn read_map(map_path: &Path) -> Vec<Vec<u32>> {
     let input = File::open(map_path).expect("No map found");
     let mut map: Vec<Vec<u32>> = vec![vec![]];
+#[derive(Component)]
+struct Solid{}
+
+struct Map(Vec<Vec<u32>>);
+
+impl Map {
 
     for (_, line) in BufReader::new(input).lines().enumerate() {
         if let Ok(line) = line {
@@ -88,8 +94,13 @@ fn read_map(map_path: &Path) -> Vec<Vec<u32>> {
             }
         }
     }
+    fn map(&self) -> &Vec<Vec<u32>>{
+        &self.0
+    }
     map
 }
 
-#[derive(Component)]
-struct Solid ();
+enum MapKind {
+    AssetIndexMap(Map),
+    SolidMap(Map, Map),
+}
