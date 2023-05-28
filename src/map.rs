@@ -18,12 +18,13 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
     let (wall_tilemap_entity, wall_tile_storage) = create_map(
         map_size,
         &mut commands,
-        read_map(Path::new("assets/maps/map1.txt")),
+        MapKind::SolidMap(Map::from_file(Path::new("assets/maps/map1.txt")),
+                          Map::from_file(Path::new("assets/maps/map1.txt"))),
     );
     let (floor_tilemap_entity, floor_tile_storage) = create_map(
         map_size,
         &mut commands,
-        read_map(Path::new("assets/maps/map_floor.txt")),
+        MapKind::AssetIndexMap(Map::from_file(Path::new("assets/maps/map_floor.txt"))),
     );
 
     commands.entity(wall_tilemap_entity).insert(TilemapBundle {
@@ -52,52 +53,88 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
 fn create_map(
     map_size: TilemapSize,
     commands: &mut Commands,
-    index_map: Vec<Vec<u32>>,
+    map: MapKind,
 ) -> (Entity, TileStorage) {
     let tilemap_entity = commands.spawn_empty().id();
     let mut tile_storage = TileStorage::empty(map_size);
-    for x in 0..map_size.x {
-        for y in 0..map_size.y {
-            let tile_pos = TilePos { x, y };
-            let tile_entity = commands
-                .spawn(TileBundle {
-                    position: tile_pos,
-                    tilemap_id: TilemapId(tilemap_entity),
-                    texture_index: TileTextureIndex(index_map[x as usize][y as usize]),
-                    ..Default::default()
-                })
-                .id();
-            tile_storage.set(&tile_pos, tile_entity);
+    match map {
+        MapKind::AssetIndexMap(m) => {
+            for x in 0..map_size.x {
+                for y in 0..map_size.y {
+                    let tile_pos = TilePos { x, y };
+                    let tile_entity = commands
+                        .spawn(TileBundle {
+                            position: tile_pos,
+                            tilemap_id: TilemapId(tilemap_entity),
+                            texture_index: TileTextureIndex(m.map()[x as usize][y as usize]),
+                            ..Default::default()
+                        })
+                        .id();
+                    tile_storage.set(&tile_pos, tile_entity);
+                }
+            }
+        },
+        MapKind::SolidMap(tm, sm) => {
+            for x in 0..map_size.x {
+                for y in 0..map_size.y {
+                    let tile_pos = TilePos { x, y };
+                    if sm.map()[x as usize][y as usize] == 0 {
+                        let tile_entity = commands
+                            .spawn((TileBundle {
+                                position: tile_pos,
+                                tilemap_id: TilemapId(tilemap_entity),
+                                texture_index: TileTextureIndex(tm.map()[x as usize][y as usize]),
+                                ..Default::default()
+                            },)).id();
+                        tile_storage.set(&tile_pos, tile_entity);
+                    }
+                    else{
+                        let tile_entity = commands
+                            .spawn((TileBundle {
+                                position: tile_pos,
+                                tilemap_id: TilemapId(tilemap_entity),
+                                texture_index: TileTextureIndex(tm.map()[x as usize][y as usize]),
+                                ..Default::default()
+                            },
+                                    Solid{},
+                            ))
+                            .id();
+                        tile_storage.set(&tile_pos, tile_entity);
+                    }
+                }
+            }
         }
     }
+    
     (tilemap_entity, tile_storage)
 }
 
-fn read_map(map_path: &Path) -> Vec<Vec<u32>> {
-    let input = File::open(map_path).expect("No map found");
-    let mut map: Vec<Vec<u32>> = vec![vec![]];
 #[derive(Component)]
 struct Solid{}
 
 struct Map(Vec<Vec<u32>>);
 
 impl Map {
+    fn from_file(map_path: &Path) -> Self {
+        let input = File::open(map_path).expect("No map found");
+        let mut map: Vec<Vec<u32>> = vec![vec![]];
 
-    for (_, line) in BufReader::new(input).lines().enumerate() {
-        if let Ok(line) = line {
-            for (x, c) in line.chars().enumerate() {
-                match c.to_digit(10) {
-                    Some(i) => map[x].push(i),
-                    None => map[x].push(0),
+        for (_, line) in BufReader::new(input).lines().enumerate() {
+            if let Ok(line) = line {
+                for (x, c) in line.chars().enumerate() {
+                    match c.to_digit(10) {
+                        Some(i) => map[x].push(i),
+                        None => map[x].push(0),
+                    }
+                    map.push(vec![]);
                 }
-                map.push(vec![]);
             }
         }
+        Map(map)
     }
     fn map(&self) -> &Vec<Vec<u32>>{
         &self.0
     }
-    map
 }
 
 enum MapKind {
