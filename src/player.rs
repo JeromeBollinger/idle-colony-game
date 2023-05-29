@@ -26,6 +26,7 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
     ));
 }
 
+#[allow(clippy::type_complexity)]
 pub fn player_movement(
     keyboard_input: Res<Input<KeyCode>>,
     mut player_query: Query<
