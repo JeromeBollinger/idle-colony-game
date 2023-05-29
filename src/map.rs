@@ -4,9 +4,14 @@ use std::fs::File;
 use std::io::*;
 use std::path::Path;
 
+pub const MAP_WIDTH: u32 = 32;
+pub const MAP_HEIGTH: u32 = 32;
+pub const TILE_WIDTH: u32 = 16;
+pub const TILE_HEIGTH: u32 = 16;
+
 pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let map_size = TilemapSize { x: 32, y: 32 };
-    let tile_size = TilemapTileSize { x: 16.0, y: 16.0 };
+    let map_size = TilemapSize { x: MAP_WIDTH, y: MAP_HEIGTH };
+    let tile_size = TilemapTileSize { x: TILE_WIDTH as f32, y: TILE_HEIGTH as f32 };
     let grid_size = tile_size.into();
     let map_type = TilemapType::default();
     let wall_texture_handle: Vec<Handle<Image>> = vec![
@@ -27,7 +32,7 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         MapKind::AssetIndexMap(Map::from_file(Path::new("assets/maps/map_floor.txt"))),
     );
 
-    commands.entity(wall_tilemap_entity).insert(TilemapBundle {
+    commands.entity(wall_tilemap_entity).insert((TilemapBundle {
         grid_size,
         map_type,
         size: map_size,
@@ -36,7 +41,8 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         tile_size,
         transform: get_tilemap_center_transform(&map_size, &grid_size, &map_type, 1.0),
         ..Default::default()
-    });
+    },
+                                                 WallMapComponent{},));
 
     commands.entity(floor_tilemap_entity).insert(TilemapBundle {
         grid_size,
@@ -49,6 +55,9 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         ..Default::default()
     });
 }
+
+#[derive(Component)]
+pub struct WallMapComponent {}
 
 fn create_map(
     map_size: TilemapSize,
@@ -110,7 +119,7 @@ fn create_map(
 }
 
 #[derive(Component)]
-struct Solid{}
+pub struct Solid{}
 
 struct Map(Vec<Vec<u32>>);
 
