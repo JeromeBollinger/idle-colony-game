@@ -26,31 +26,6 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
     ));
 }
 
-pub fn collide_2d(
-    rect1_x: f32,
-    rect1_width: f32,
-    rect1_y: f32,
-    rect1_heigth: f32,
-    rect2_x: f32,
-    rect2_width: f32,
-    rect2_y: f32,
-    rect2_heigth: f32,
-) -> bool {
-    if collide_1d(rect1_x, rect1_width, rect2_x, rect2_width)
-        && collide_1d(rect1_y, rect1_heigth, rect2_y, rect2_heigth)
-    {
-        return true;
-    }
-    false
-}
-
-pub fn collide_1d(rect1_p: f32, rect1_length: f32, rect2_p: f32, rect2_length: f32) -> bool {
-    if rect1_p + rect1_length <= rect2_p || rect1_p >= rect2_p + rect2_length {
-        return false;
-    }
-    true
-}
-
 pub fn player_movement(
     keyboard_input: Res<Input<KeyCode>>,
     mut player_query: Query<
@@ -74,17 +49,20 @@ pub fn player_movement(
     let mut direction = Vec3::ZERO;
     if keyboard_input.pressed(KeyCode::Left) || keyboard_input.pressed(KeyCode::A) {
         let mut collision = false;
+        let future_player = HitBox::new(
+            transform.translation.x - PLAYER_SPEED * time.delta_seconds(),
+            PLAYER_WIDTH,
+            transform.translation.y,
+            PLAYER_HEIGTH,
+        );
         for wall in solid_walls.iter() {
-            if collide_2d(
-                transform.translation.x - PLAYER_SPEED * time.delta_seconds(),
-                PLAYER_WIDTH,
-                transform.translation.y,
-                PLAYER_HEIGTH,
+            let wall = HitBox::new(
                 map.translation.x + wall.x as f32 * TILE_WIDTH as f32,
                 TILE_WIDTH as f32,
                 map.translation.y + wall.y as f32 * TILE_HEIGTH as f32,
                 TILE_HEIGTH as f32,
-            ) {
+            );
+            if collide_2d(&future_player, &wall) {
                 collision = true;
             }
         }
@@ -94,17 +72,20 @@ pub fn player_movement(
     }
     if keyboard_input.pressed(KeyCode::Right) || keyboard_input.pressed(KeyCode::D) {
         let mut collision = false;
+        let future_player = HitBox::new(
+            transform.translation.x + PLAYER_SPEED * time.delta_seconds(),
+            PLAYER_WIDTH,
+            transform.translation.y,
+            PLAYER_HEIGTH,
+        );
         for wall in solid_walls.iter() {
-            if collide_2d(
-                transform.translation.x + PLAYER_SPEED * time.delta_seconds(),
-                PLAYER_WIDTH,
-                transform.translation.y,
-                PLAYER_HEIGTH,
+            let wall = HitBox::new(
                 map.translation.x + wall.x as f32 * TILE_WIDTH as f32,
                 TILE_WIDTH as f32,
                 map.translation.y + wall.y as f32 * TILE_HEIGTH as f32,
                 TILE_HEIGTH as f32,
-            ) {
+            );
+            if collide_2d(&future_player, &wall) {
                 collision = true;
             }
         }
@@ -114,17 +95,20 @@ pub fn player_movement(
     }
     if keyboard_input.pressed(KeyCode::Up) || keyboard_input.pressed(KeyCode::W) {
         let mut collision = false;
+        let future_player = HitBox::new(
+            transform.translation.x,
+            PLAYER_WIDTH,
+            transform.translation.y + PLAYER_SPEED * time.delta_seconds(),
+            PLAYER_HEIGTH,
+        );
         for wall in solid_walls.iter() {
-            if collide_2d(
-                transform.translation.x,
-                PLAYER_WIDTH,
-                transform.translation.y + PLAYER_SPEED * time.delta_seconds(),
-                PLAYER_HEIGTH,
+            let wall = HitBox::new(
                 map.translation.x + wall.x as f32 * TILE_WIDTH as f32,
                 TILE_WIDTH as f32,
                 map.translation.y + wall.y as f32 * TILE_HEIGTH as f32,
                 TILE_HEIGTH as f32,
-            ) {
+            );
+            if collide_2d(&future_player, &wall) {
                 collision = true;
             }
         }
@@ -134,17 +118,20 @@ pub fn player_movement(
     }
     if keyboard_input.pressed(KeyCode::Down) || keyboard_input.pressed(KeyCode::S) {
         let mut collision = false;
+        let future_player = HitBox::new(
+            transform.translation.x,
+            PLAYER_WIDTH,
+            transform.translation.y - PLAYER_SPEED * time.delta_seconds(),
+            PLAYER_HEIGTH,
+        );
         for wall in solid_walls.iter() {
-            if collide_2d(
-                transform.translation.x,
-                PLAYER_WIDTH,
-                transform.translation.y - PLAYER_SPEED * time.delta_seconds(),
-                PLAYER_HEIGTH,
+            let wall = HitBox::new(
                 map.translation.x + wall.x as f32 * TILE_WIDTH as f32,
                 TILE_WIDTH as f32,
                 map.translation.y + wall.y as f32 * TILE_HEIGTH as f32,
                 TILE_HEIGTH as f32,
-            ) {
+            );
+            if collide_2d(&future_player, &wall) {
                 collision = true;
             }
         }
@@ -168,6 +155,40 @@ pub fn exit_game(keyboard_input: Res<Input<KeyCode>>, mut exit: EventWriter<AppE
     }
 }
 
+pub struct HitBox {
+    posx: f32,
+    width: f32,
+    posy: f32,
+    heigth: f32,
+}
+
+impl HitBox {
+    pub fn new(posx: f32, width: f32, posy: f32, heigth: f32) -> Self {
+        HitBox {
+            posx,
+            width,
+            posy,
+            heigth,
+        }
+    }
+}
+
+pub fn collide_2d(rect1: &HitBox, rect2: &HitBox) -> bool {
+    if collide_1d(rect1.posx, rect1.width, rect2.posx, rect2.width)
+        && collide_1d(rect1.posy, rect1.heigth, rect2.posy, rect2.heigth)
+    {
+        return true;
+    }
+    false
+}
+
+pub fn collide_1d(rect1_p: f32, rect1_length: f32, rect2_p: f32, rect2_length: f32) -> bool {
+    if rect1_p + rect1_length <= rect2_p || rect1_p >= rect2_p + rect2_length {
+        return false;
+    }
+    true
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -181,15 +202,33 @@ mod tests {
 
     #[test]
     fn collide_2d_test() {
-        assert!(!collide_2d(0.0, 1.0, 0.0, 1.0, 2.0, 1.0, 2.0, 1.0));
-        assert!(!collide_2d(0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 2.0, 1.0));
-        assert!(!collide_2d(0.0, 1.0, 0.0, 1.0, 2.0, 1.0, 0.0, 1.0));
-        assert!(collide_2d(0.0, 1.0, 0.0, 1.0, 0.5, 1.0, 0.0, 1.0));
-        assert!(!collide_2d(0.0, 1.0, 0.0, 1.0, -2.0, 1.0, 0.0, 1.0));
-        assert!(!collide_2d(0.0, 1.0, 0.0, 1.0, 0.0, 1.0, -2.0, 1.0));
-        assert!(!collide_2d(75.0, 16.0, 0.0, 16.0, -248.0, 16.0, -8.0, 16.0));
         assert!(!collide_2d(
-            332.0, 16.0, -207.0, 16.0, -56.0, 16.0, -200.0, 16.0
+            &HitBox::new(0.0, 1.0, 0.0, 1.0),
+            &HitBox::new(2.0, 1.0, 2.0, 1.0)
+        ));
+        assert!(!collide_2d(
+            &HitBox::new(0.0, 1.0, 0.0, 1.0),
+            &HitBox::new(0.0, 1.0, 2.0, 1.0)
+        ));
+        assert!(!collide_2d(
+            &HitBox::new(0.0, 1.0, 0.0, 1.0),
+            &HitBox::new(2.0, 1.0, 0.0, 1.0)
+        ));
+        assert!(!collide_2d(
+            &HitBox::new(0.0, 1.0, 0.0, 1.0),
+            &HitBox::new(-2.0, 1.0, 0.0, 1.0)
+        ));
+        assert!(!collide_2d(
+            &HitBox::new(0.0, 1.0, 0.0, 1.0),
+            &HitBox::new(0.0, 1.0, -2.0, 1.0)
+        ));
+        assert!(!collide_2d(
+            &HitBox::new(75.0, 16.0, 0.0, 16.0),
+            &HitBox::new(-248.0, 16.0, -8.0, 16.0)
+        ));
+        assert!(collide_2d(
+            &HitBox::new(0.0, 1.0, 0.0, 1.0),
+            &HitBox::new(0.5, 1.0, 0.0, 1.0)
         ));
     }
 }

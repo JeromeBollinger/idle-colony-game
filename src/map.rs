@@ -10,14 +10,8 @@ pub const TILE_WIDTH: u32 = 16;
 pub const TILE_HEIGTH: u32 = 16;
 
 pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let map_size = TilemapSize {
-        x: MAP_WIDTH,
-        y: MAP_HEIGTH,
-    };
-    let tile_size = TilemapTileSize {
-        x: TILE_WIDTH as f32,
-        y: TILE_HEIGTH as f32,
-    };
+    let map_size = TilemapSize { x: MAP_WIDTH, y: MAP_HEIGTH };
+    let tile_size = TilemapTileSize { x: TILE_WIDTH as f32, y: TILE_HEIGTH as f32 };
     let grid_size = tile_size.into();
     let map_type = TilemapType::default();
     let wall_texture_handle: Vec<Handle<Image>> = vec![
@@ -29,10 +23,8 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
     let (wall_tilemap_entity, wall_tile_storage) = create_map(
         map_size,
         &mut commands,
-        MapKind::SolidMap(
-            Map::from_file(Path::new("assets/maps/map1.txt")),
-            Map::from_file(Path::new("assets/maps/map1.txt")),
-        ),
+        MapKind::SolidMap(Map::from_file(Path::new("assets/maps/map1.txt")),
+                          Map::from_file(Path::new("assets/maps/map1.txt"))),
     );
     let (floor_tilemap_entity, floor_tile_storage) = create_map(
         map_size,
@@ -40,19 +32,17 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         MapKind::AssetIndexMap(Map::from_file(Path::new("assets/maps/map_floor.txt"))),
     );
 
-    commands.entity(wall_tilemap_entity).insert((
-        TilemapBundle {
-            grid_size,
-            map_type,
-            size: map_size,
-            storage: wall_tile_storage,
-            texture: TilemapTexture::Vector(wall_texture_handle),
-            tile_size,
-            transform: get_tilemap_center_transform(&map_size, &grid_size, &map_type, 1.0),
-            ..Default::default()
-        },
-        WallMapComponent {},
-    ));
+    commands.entity(wall_tilemap_entity).insert((TilemapBundle {
+        grid_size,
+        map_type,
+        size: map_size,
+        storage: wall_tile_storage,
+        texture: TilemapTexture::Vector(wall_texture_handle),
+        tile_size,
+        transform: get_tilemap_center_transform(&map_size, &grid_size, &map_type, 1.0),
+        ..Default::default()
+    },
+                                                 WallMapComponent{},));
 
     commands.entity(floor_tilemap_entity).insert(TilemapBundle {
         grid_size,
@@ -92,7 +82,7 @@ fn create_map(
                     tile_storage.set(&tile_pos, tile_entity);
                 }
             }
-        }
+        },
         MapKind::SolidMap(tm, sm) => {
             for x in 0..map_size.x {
                 for y in 0..map_size.y {
@@ -104,21 +94,18 @@ fn create_map(
                                 tilemap_id: TilemapId(tilemap_entity),
                                 texture_index: TileTextureIndex(tm.map()[x as usize][y as usize]),
                                 ..Default::default()
-                            },))
-                            .id();
+                            },)).id();
                         tile_storage.set(&tile_pos, tile_entity);
-                    } else {
+                    }
+                    else{
                         let tile_entity = commands
-                            .spawn((
-                                TileBundle {
-                                    position: tile_pos,
-                                    tilemap_id: TilemapId(tilemap_entity),
-                                    texture_index: TileTextureIndex(
-                                        tm.map()[x as usize][y as usize],
-                                    ),
-                                    ..Default::default()
-                                },
-                                Solid {},
+                            .spawn((TileBundle {
+                                position: tile_pos,
+                                tilemap_id: TilemapId(tilemap_entity),
+                                texture_index: TileTextureIndex(tm.map()[x as usize][y as usize]),
+                                ..Default::default()
+                            },
+                                    Solid{},
                             ))
                             .id();
                         tile_storage.set(&tile_pos, tile_entity);
@@ -127,12 +114,12 @@ fn create_map(
             }
         }
     }
-
+    
     (tilemap_entity, tile_storage)
 }
 
 #[derive(Component)]
-pub struct Solid {}
+pub struct Solid{}
 
 struct Map(Vec<Vec<u32>>);
 
@@ -154,7 +141,7 @@ impl Map {
         }
         Map(map)
     }
-    fn map(&self) -> &Vec<Vec<u32>> {
+    fn map(&self) -> &Vec<Vec<u32>>{
         &self.0
     }
 }
