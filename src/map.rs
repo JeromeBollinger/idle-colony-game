@@ -6,7 +6,6 @@ pub const MAP_HEIGTH: u32 = 32;
 pub const TILE_WIDTH: u32 = 16;
 pub const TILE_HEIGTH: u32 = 16;
 
-
 pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
     let map_size = TilemapSize {
         x: MAP_WIDTH,
@@ -27,10 +26,7 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
     let (wall_tilemap_entity, wall_tile_storage) = create_map(
         map_size,
         &mut commands,
-        MapKind::SolidMap(
-            Map::from_string(&MAP1),
-            Map::from_string(&MAP1),
-        ),
+        MapKind::SolidMap(Map::from_string(&MAP1), Map::from_string(&MAP1)),
     );
     let (floor_tilemap_entity, floor_tile_storage) = create_map(
         map_size,
@@ -139,13 +135,13 @@ impl Map {
         let mut map: Vec<Vec<u32>> = vec![vec![]];
 
         for line in map_path.lines() {
-                for (x, c) in line.chars().enumerate() {
-                    match c.to_digit(10) {
-                        Some(i) => map[x].push(i),
-                        None => map[x].push(0),
-                    }
-                    map.push(vec![]);
+            for (x, c) in line.chars().enumerate() {
+                match c.to_digit(10) {
+                    Some(i) => map[x].push(i),
+                    None => map[x].push(0),
                 }
+                map.push(vec![]);
+            }
         }
         Map(map)
     }
