@@ -1,0 +1,17 @@
+<!DOCTYPE html><html lang="en"><head>
+        <meta charset="utf-8">
+        <title>Idle Colony Game</title> <!-- ToDo -->
+        
+        <link rel="icon" href="assets/player.png">
+    
+<link rel="preload" href="/idle-colony-game/idle_colony_game-c84bff9cd9d7395a_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
+<link rel="modulepreload" href="/idle-colony-game/idle_colony_game-c84bff9cd9d7395a.js"></head>
+    <body>
+        <div class="game-container">
+            <canvas id="bevy">
+                Javascript and support for canvas is required
+            </canvas>
+        </div>
+    
+
+<script type="module">import init from '/idle-colony-game/idle_colony_game-c84bff9cd9d7395a.js';init('/idle-colony-game/idle_colony_game-c84bff9cd9d7395a_bg.wasm');</script></body></html>
