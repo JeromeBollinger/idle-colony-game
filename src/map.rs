@@ -26,12 +26,12 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
     let (wall_tilemap_entity, wall_tile_storage) = create_map(
         map_size,
         &mut commands,
-        MapKind::SolidMap(Map::from_string(&MAP1), Map::from_string(&MAP1)),
+        MapKind::SolidMap(Map::from_string(MAP1), Map::from_string(MAP1)),
     );
     let (floor_tilemap_entity, floor_tile_storage) = create_map(
         map_size,
         &mut commands,
-        MapKind::AssetIndexMap(Map::from_string(&MAP_FLOOR)),
+        MapKind::AssetIndexMap(Map::from_string(MAP_FLOOR)),
     );
 
     commands.entity(wall_tilemap_entity).insert((
