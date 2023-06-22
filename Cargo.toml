@@ -10,6 +10,3 @@ bevy = "0.10.1"
 bevy_ecs_tilemap = "0.10.0"
 wasm = "0.0.0"
 wasm-bindgen = "0.2.87"
-
-[lib]
-crate-type = ["cdylib", "rlib"]

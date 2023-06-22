@@ -4,14 +4,12 @@ use crate::player::*;
 use bevy::prelude::*;
 use bevy_ecs_tilemap::prelude::*;
 use tracks::*;
-use wasm_bindgen::prelude::*;
 
 mod game_camera;
 mod map;
 mod player;
 mod tracks;
 
-#[wasm_bindgen]
 pub fn run() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {

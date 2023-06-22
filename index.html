@@ -1,22 +1,16 @@
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/assets/player.png">
-    <style>
-      body {
-        margin: 0;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      canvas {
-        background-color: white;
-      }
-    </style>
-  </head>
-  <script type="module">
-    import init from './out/idle_colony_game.js';
-    init();
-  </script>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>Idle Colony Game</title> <!-- ToDo -->
+        <link data-trunk rel="copy-dir" href="assets"/>
+        <link rel="icon" href="assets/player.png">
+    </head>
+    <body>
+        <div class="game-container">
+            <canvas id="bevy">
+                Javascript and support for canvas is required
+            </canvas>
+        </div>
+    </body>
 </html>
