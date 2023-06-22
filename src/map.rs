@@ -17,12 +17,8 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
     };
     let grid_size = tile_size.into();
     let map_type = TilemapType::default();
-    let wall_texture_handle: Vec<Handle<Image>> = vec![
-        asset_server.load("transparent.png"),
-        asset_server.load("regolith2.png"),
-    ];
-    let floor_texture_handle: Vec<Handle<Image>> = vec![asset_server.load("regolith.png")];
-
+    let wall_texture_handle: Handle<Image> = asset_server.load("regolith2-sheet.png");
+    let floor_texture_handle: Handle<Image> = asset_server.load("regolith.png");
     let (wall_tilemap_entity, wall_tile_storage) = create_map(
         map_size,
         &mut commands,
@@ -40,7 +36,7 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
             map_type,
             size: map_size,
             storage: wall_tile_storage,
-            texture: TilemapTexture::Vector(wall_texture_handle),
+            texture: TilemapTexture::Single(wall_texture_handle),
             tile_size,
             transform: get_tilemap_center_transform(&map_size, &grid_size, &map_type, 1.0),
             ..Default::default()
@@ -53,7 +49,7 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         map_type,
         size: map_size,
         storage: floor_tile_storage,
-        texture: TilemapTexture::Vector(floor_texture_handle),
+        texture: TilemapTexture::Single(floor_texture_handle),
         tile_size,
         transform: get_tilemap_center_transform(&map_size, &grid_size, &map_type, 0.0),
         ..Default::default()
