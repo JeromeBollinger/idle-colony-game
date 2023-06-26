@@ -190,6 +190,24 @@ pub fn collide_1d(rect1_p: f32, rect1_length: f32, rect2_p: f32, rect2_length: f
     true
 }
 
+#[derive(Component)]
+pub struct Train {}
+
+pub fn spawn_train(mut commands: Commands, asset_server: Res<AssetServer>) {
+    commands.spawn((
+        SpriteBundle {
+            transform: Transform {
+                translation: Vec3::new(0.0, 0.0, 2.5),
+                rotation: Quat::IDENTITY,
+                scale: Vec3::new(2.0, 2.0, 1.0),
+            },
+            texture: asset_server.load("train.png"),
+            ..default()
+        },
+        Train {},
+    ));
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

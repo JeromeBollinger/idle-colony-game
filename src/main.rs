@@ -21,6 +21,7 @@ fn main() {
         .add_startup_system(initiate_map)
         .add_startup_system(default_camera)
         .add_startup_system(spawn_player)
+        .add_startup_system(spawn_train)
         .add_system(player_movement)
         .add_system(exit_game)
         .add_system(camera_zoom)
