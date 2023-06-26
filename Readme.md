@@ -33,3 +33,13 @@ This concept would be different from the two games I took inspiration from, wher
 I would love to have a colleague working on this part, since I have neither the talent, creativity nor interest in making this.
 
 
+## Tools
+
+### Aseprite
+
+[Aseprite](https://www.aseprite.org) is nice for simple pixel art.
+Easy to install on linux
+
+### TexturePacker
+
+[Texture packer](https://www.codeandweb.com/texturepacker) can be used to create spritesheets from a folder of images.
