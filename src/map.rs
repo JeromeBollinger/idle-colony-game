@@ -19,6 +19,7 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
     let map_type = TilemapType::default();
     let wall_texture_handle: Handle<Image> = asset_server.load("regolith2-sheet.png");
     let floor_texture_handle: Handle<Image> = asset_server.load("regolith.png");
+    let track_texture_handle: Handle<Image> = asset_server.load("track_spritesheet.png");
     let (wall_tilemap_entity, wall_tile_storage) = create_map(
         map_size,
         &mut commands,
@@ -28,6 +29,11 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         map_size,
         &mut commands,
         MapKind::AssetIndexMap(Map::from_string(MAP_FLOOR)),
+    );
+    let (track_tilemap_entity, track_tile_storage) = create_map(
+        map_size,
+        &mut commands,
+        MapKind::AssetIndexMap(Map::from_string(TRACK_MAP)),
     );
 
     commands.entity(wall_tilemap_entity).insert((
@@ -52,6 +58,17 @@ pub fn initiate_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         texture: TilemapTexture::Single(floor_texture_handle),
         tile_size,
         transform: get_tilemap_center_transform(&map_size, &grid_size, &map_type, 0.0),
+        ..Default::default()
+    });
+
+    commands.entity(track_tilemap_entity).insert(TilemapBundle {
+        grid_size,
+        map_type,
+        size: map_size,
+        storage: track_tile_storage,
+        texture: TilemapTexture::Single(track_texture_handle),
+        tile_size,
+        transform: get_tilemap_center_transform(&map_size, &grid_size, &map_type, 0.5),
         ..Default::default()
     });
 }
@@ -216,3 +233,36 @@ const MAP_FLOOR: &str = "00000000000000000000000000000000
 00000000000000000000000000000000
 00000000000000000000000000000000
 00000000000000000000000000000000";
+
+const TRACK_MAP: &str = "88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+33333333333333333333333333333333
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888
+88888888888888888888888888888888";
